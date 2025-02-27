@@ -5,10 +5,10 @@ import axios from 'axios';
 import mongoose from 'mongoose';
 //import { Analysis } from '../types/analysis';
 
-// Connect to MongoDB
+
 mongoose.connect(process.env.MONGODB_URI!);
 
-// Define schema
+
 const analysisSchema = new mongoose.Schema({
   videoId: String,
   comments: [{
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid YouTube URL' }, { status: 400 });
     }
 
-    // Fetch YouTube comments
+    
     const response = await axios.get(
       `https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${videoId}&key=${process.env.YOUTUBE_API_KEY}&maxResults=10`
     );
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       date: new Date(item.snippet.topLevelComment.snippet.publishedAt)
     }));
 
-    // Analyze sentiment
+  
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       })
     );
 
-    // Extract keywords
+   
     const tfidf = new natural.TfIdf();
     comments.forEach((comment: any) => tfidf.addDocument(comment.text));
     
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
       )
     );
 
-    // Save to MongoDB
+   
     const analysis = new Analysis({ 
       videoId, 
       comments: analyzedComments, 
