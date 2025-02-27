@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import natural from 'natural';
 import axios from 'axios';
 import mongoose from 'mongoose';
-import { Analysis } from '@/types/analysis';
+//import { Analysis } from '../types/analysis';
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI!);
